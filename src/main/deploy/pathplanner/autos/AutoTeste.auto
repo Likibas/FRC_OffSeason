@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PathTeste"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "subirIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PathTeste2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "soltarPiece"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
