@@ -27,6 +27,7 @@ public class intake extends SubsystemBase {
   private boolean esperandoPeca = false;
 
   // PID e variáveis de estado
+  private boolean sensorAtivo = true;
   private static PIDController PIDintake = new PIDController(0.05, 0, 0);
   public double intp = -20;
   public double Mbola = 0;
@@ -35,39 +36,52 @@ public class intake extends SubsystemBase {
   public void pegar() {
     intp = -3; // Posição de pegar
     Mbola = 0.30;
-    this.esperandoPeca = true;
+    // this.esperandoPeca = true;
+  }
+
+  public void pegarBoia() {
+    intp = -3; // Posição de pegar
+    Mbola = 0.14;
+   // this.esperandoPeca = true;
   }
 
   public void solta() {
     Mbola = -0.5;
-    this.esperandoPeca = false;
+  //  this.esperandoPeca = false;
   }
 
   public void cima() {
-    intp = -19; // Posição de subida
-    Mbola = 0.1;
-    this.esperandoPeca = false; 
+    intp = -17; // Posição de subida
+    Mbola = 0.17;
+    // this.esperandoPeca = false; 
   }
   public void cima2() {
-    intp = -19; // Posição de subida
+    intp = -17; // Posição de subida
     Mbola = 0;
-    this.esperandoPeca = false; 
+    // this.esperandoPeca = false; 
   }
 
+ // public void pararSensor() {
+   // sensorAtivo = false;
+  // }  
+
   /** Retorna true quando o sensor detecta a peça (LED vermelho). */
-  public boolean temPeca() {
-    return !pino1.get();
-  }
+ // public boolean temPeca() {
+   // if (sensorAtivo) {
+     // return false; // Sensor desligado → sempre retorna falso
+   // }
+   // return pino1.get();
+ // }  
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     // Dashboard
-    SmartDashboard.putBoolean("Sensor Detectou Peça?", temPeca());
+    // SmartDashboard.putBoolean("Sensor Detectou Peça?", temPeca());
     
-    if (this.esperandoPeca && temPeca()) {
-        this.cima();
-    }
+  // if (temPeca()) {
+     //  this.cima();
+    // }
     
     // Controle dos motores
     bola.set(Mbola);
@@ -77,12 +91,6 @@ public class intake extends SubsystemBase {
   // Comandos pro autônomo
   public void soltaAuto() {
     Mbola = -0.5;
-  }
-
-  public void pegarAuto() {
-    intp = -3; 
-    Mbola = 0.30;
-    this.esperandoPeca = true;
   }
 
 }

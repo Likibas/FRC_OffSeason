@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.intake;
+import frc.robot.subsystems.shooter;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
@@ -36,12 +37,12 @@ public class RobotContainer
 {
   
   private final intake intake = new intake();
+  private final shooter shooter = new shooter();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static CommandXboxController driverXbox = new CommandXboxController(0);
   // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                                "swerve"));
+  private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -76,25 +77,9 @@ public class RobotContainer
                                                                     .scaleTranslation(0.2)
                                                                     .allianceRelativeControl(true);
   // Derive the heading axis with math!
-  SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
-                                                                               .withControllerHeadingAxis(() ->
-                                                                                                              Math.sin(
-                                                                                                                  driverXbox.getRawAxis(
-                                                                                                                      2) *
-                                                                                                                  Math.PI) *
-                                                                                                              (Math.PI *
-                                                                                                               2),
-                                                                                                          () ->
-                                                                                                              Math.cos(
-                                                                                                                  driverXbox.getRawAxis(
-                                                                                                                      2) *
-                                                                                                                  Math.PI) *
-                                                                                                              (Math.PI *
-                                                                                                               2))
-                                                                               .headingWhile(true)
-                                                                               .translationHeadingOffset(true)
-                                                                               .translationHeadingOffset(Rotation2d.fromDegrees(
-                                                                                   0));
+  SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy().withControllerHeadingAxis(() ->
+Math.sin(driverXbox.getRawAxis(2) *Math.PI) *(Math.PI *2),() ->Math.cos(driverXbox.getRawAxis(2) *Math.PI) *
+(Math.PI *2)).headingWhile(true).translationHeadingOffset(true).translationHeadingOffset(Rotation2d.fromDegrees(0));
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -104,8 +89,13 @@ public class RobotContainer
     driverXbox.rightTrigger().onTrue(new InstantCommand(() -> intake.pegar(),intake));
     driverXbox.leftTrigger().onTrue(new InstantCommand(() -> intake.solta(),intake));
     driverXbox.leftTrigger().onFalse(new InstantCommand(() -> intake.cima2(),intake)); 
+    driverXbox.rightBumper().onTrue(new InstantCommand(() -> intake.cima(),intake));
     driverXbox.povUp().whileTrue(new InstantCommand(() -> drivebase.rodaReta(),drivebase)); 
-    //driverXbox.povUp().onTrue(drivebase.getTargetSpeeds(0,0,Rotation2d.fromDegrees(0)));  
+    driverXbox.b().onTrue(new InstantCommand(() -> shooter.atirar(),shooter));
+    driverXbox.b().onFalse(new InstantCommand(() -> shooter.parar(),shooter));
+    driverXbox.povLeft().whileTrue(new RunCommand(()-> shooter.esquerda(),shooter));
+    driverXbox.povRight().whileTrue(new RunCommand(()-> shooter.direita(),shooter));
+    //driverXbox.povUp().onTrue(drivebase.getTargetSpeeds(0,0,Rotation2d.fromDegrees(0));  
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -134,9 +124,9 @@ public class RobotContainer
     Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(
         driveDirectAngleKeyboard);
 
-        NamedCommands.registerCommand("soltarPiece", new RunCommand(() -> intake.Mbola = -0.5, intake).withTimeout(1.0).andThen(() -> intake.Mbola = 0));
+        NamedCommands.registerCommand("soltarPiece", new RunCommand(() -> intake.Mbola = -0.6, intake).withTimeout(0.5).andThen(() -> intake.Mbola = 0));
         NamedCommands.registerCommand("subirIntake", new InstantCommand(() -> intake.cima2()));
-         new EventTrigger("pegarPiece").onTrue(new InstantCommand(() -> intake.pegarAuto()));
+         new EventTrigger("pegarPiece").onTrue(new InstantCommand(() -> intake.pegar()));
 
     if (RobotBase.isSimulation())
     {

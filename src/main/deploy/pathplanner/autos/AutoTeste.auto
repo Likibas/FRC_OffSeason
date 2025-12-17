@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "PathTeste"
+            "pathName": "PathIdaBola1"
           }
         },
         {
@@ -19,7 +19,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "PathTeste2"
+            "pathName": "PathVoltaBola1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "soltarPiece"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PathIdaBola2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": " PathIdaBola2Outro"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "subirIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PathVoltaBola2"
           }
         },
         {
